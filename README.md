@@ -1,4 +1,10 @@
-# Update pubspec.yaml version action
+<h1 align="center">
+    <a href="https://stikky.co/">
+        <img width=100 src="https://avatars.githubusercontent.com/u/99006953">
+    </a>
+    <br>
+    Update pubspec.yaml version action
+</h1>
 
 This action updates the version in pubspec.yaml file. It allows for incrementing the build number or the version by a major, minor or patch version.
 
