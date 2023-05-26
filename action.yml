@@ -1,0 +1,23 @@
+name: 'Update pubspec version'
+description: 'This action updates the pubspec version with different strategies'
+inputs:
+  strategy:
+    description: 'The strategy to use to update the version. Can be major, minor or patch'
+    required: true
+    default: 'patch'
+  bump-build:
+    description: 'Whether to bump the build number or not'
+    required: true
+    default: 'true'
+  path:
+    description: 'The root directory of the project'
+    required: true
+    default: './'
+outputs:
+  old-version:
+    description: 'The old version'
+  new-version:
+    description: 'The new version'
+runs:
+  using: 'node16'
+  main: 'index.js'
