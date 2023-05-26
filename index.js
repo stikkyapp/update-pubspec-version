@@ -22,7 +22,7 @@ try {
     core.debug(`📝 Using bump-build ${bumpBuild}`);
     core.info(`✅ Found pubspec.yaml at ${pubspecPath}`);
     const versionUtils = require('./version-utils');
-    const oldVersion = versionUtils.getLongVersion(pubspecPath);
+    const oldVersion = versionUtils.readVersion(pubspecPath);
     core.info(`📀 Found version ${oldVersion}`);
     if (bumpBuild === true) {
         core.debug(`📝 Bumping build number`);
