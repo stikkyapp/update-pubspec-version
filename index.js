@@ -24,12 +24,8 @@ try {
     const versionUtils = require('./version-utils');
     const oldVersion = versionUtils.readVersion(pubspecPath);
     core.info(`📀 Found version ${oldVersion}`);
-    if (bumpBuild === true) {
-        core.debug(`📝 Bumping build number`);
-        versionUtils.bumpBuildNumber(pubspecPath);
-    }
-    const newVersion = versionUtils.bumpVersion(pubspecPath, strategy);
-    core.info(`🚀 Bumped version to ${newVersion}`);
+    const newVersion = versionUtils.bumpVersion(pubspecPath, strategy, bumpBuild);
+    core.info(`🚀 Successfully bumped version to ${newVersion}`);
 
     core.setOutput("old-version", oldVersion);
     core.setOutput("new-version", newVersion);

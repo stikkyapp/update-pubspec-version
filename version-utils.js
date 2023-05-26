@@ -38,22 +38,20 @@ function getBuildNumber(path) {
     throw new Error("Invalid version format");
 }
 
-function bumpBuildNumber(path) {
-    const build = getBuildNumber(path) + 1;
-    const version = getShortVersion(path);
-    const newVersion = version + "+" + build.toString();
-    writeVersion(path, newVersion);
-    return build;
-}
-
-function bumpVersion(path, strategy) {
+function bumpVersion(path, strategy, bumpBuild) {
     if (strategy === "none") {
         return readVersion(path);
     }
-    const version = getShortVersion(path);
-    const build = getBuildNumber(path).toString();
-    const semverInc = require('semver/functions/inc')
-    const newVersion = semverInc(version, strategy) + "+" + build;
+    let version = getShortVersion(path);
+    if (strategy !== "none") {
+        const semverInc = require('semver/functions/inc')
+        version = semverInc(version, strategy);
+    }
+    let build = getBuildNumber(path);
+    if (bumpBuild) {
+        build++;
+    }
+    const newVersion = version + "+" + build.toString();
     writeVersion(path, newVersion);
     return newVersion;
 }
@@ -63,6 +61,5 @@ module.exports = {
     readVersion,
     getShortVersion,
     getBuildNumber,
-    bumpBuildNumber,
     bumpVersion,
 }

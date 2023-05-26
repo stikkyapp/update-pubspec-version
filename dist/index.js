@@ -3373,22 +3373,20 @@ function getBuildNumber(path) {
     throw new Error("Invalid version format");
 }
 
-function bumpBuildNumber(path) {
-    const build = getBuildNumber(path) + 1;
-    const version = getShortVersion(path);
-    const newVersion = version + "+" + build.toString();
-    writeVersion(path, newVersion);
-    return build;
-}
-
-function bumpVersion(path, strategy) {
+function bumpVersion(path, strategy, bumpBuild) {
     if (strategy === "none") {
         return readVersion(path);
     }
-    const version = getShortVersion(path);
-    const build = getBuildNumber(path).toString();
-    const semverInc = __nccwpck_require__(749)
-    const newVersion = semverInc(version, strategy) + "+" + build;
+    let version = getShortVersion(path);
+    if (strategy !== "none") {
+        const semverInc = __nccwpck_require__(749)
+        version = semverInc(version, strategy);
+    }
+    let build = getBuildNumber(path);
+    if (bumpBuild) {
+        build++;
+    }
+    const newVersion = version + "+" + build.toString();
     writeVersion(path, newVersion);
     return newVersion;
 }
@@ -3398,7 +3396,6 @@ module.exports = {
     readVersion,
     getShortVersion,
     getBuildNumber,
-    bumpBuildNumber,
     bumpVersion,
 }
 
@@ -3559,12 +3556,8 @@ try {
     const versionUtils = __nccwpck_require__(490);
     const oldVersion = versionUtils.readVersion(pubspecPath);
     core.info(`📀 Found version ${oldVersion}`);
-    if (bumpBuild === true) {
-        core.debug(`📝 Bumping build number`);
-        versionUtils.bumpBuildNumber(pubspecPath);
-    }
-    const newVersion = versionUtils.bumpVersion(pubspecPath, strategy);
-    core.info(`🚀 Bumped version to ${newVersion}`);
+    const newVersion = versionUtils.bumpVersion(pubspecPath, strategy, bumpBuild);
+    core.info(`🚀 Successfully bumped version to ${newVersion}`);
 
     core.setOutput("old-version", oldVersion);
     core.setOutput("new-version", newVersion);
