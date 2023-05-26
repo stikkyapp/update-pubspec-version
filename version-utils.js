@@ -1,26 +1,34 @@
-function readYaml(path) {
+function readVersion(path) {
     const fs = require('fs');
-    const yaml = require('js-yaml');
     const fileContents = fs.readFileSync(path, 'utf8');
-    return yaml.load(fileContents);
+    for (const line of fileContents.split("\n")) {
+        if (line.startsWith("version:")) {
+            return line.replace("version:", "").trim();
+        }
+    }
+    throw new Error("Version not found");
 }
 
-function getLongVersion(path) {
-    const pubspec = readYaml(path);
-    if (!pubspec.version) {
-        throw new Error("Version not found");
+function writeVersion(path, version) {
+    const fs = require('fs');
+    const fileContents = fs.readFileSync(path, 'utf8');
+    const lines = fileContents.split("\n");
+    for (let i = 0; i < lines.length; i++) {
+        if (lines[i].startsWith("version:")) {
+            lines[i] = "version: " + version;
+        }
     }
-    return pubspec.version;
+    fs.writeFileSync(path, lines.join("\n"), 'utf8');
 }
 
 function getShortVersion(path) {
-    const version = getLongVersion(path);
+    const version = readVersion(path);
     const split = version.split("+");
     return split[0];
 }
 
 function getBuildNumber(path) {
-    const version = getLongVersion(path);
+    const version = readVersion(path);
     const versionSplit = version.split("+");
     if (versionSplit.length === 1) {
         return 0;
@@ -31,33 +39,28 @@ function getBuildNumber(path) {
 }
 
 function bumpBuildNumber(path) {
-    const build = getBuildNumber(path);
-    const pubspec = readYaml(path);
-    pubspec.version = pubspec.version.split("+")[0] + "+" + (build + 1).toString();
-    const fs = require('fs');
-    const yaml = require('js-yaml');
-    fs.writeFileSync(path, yaml.dump(pubspec));
-    return build + 1;
+    const build = getBuildNumber(path) + 1;
+    const version = getShortVersion(path);
+    const newVersion = version + "+" + build.toString();
+    writeVersion(path, newVersion);
+    return build;
 }
 
 function bumpVersion(path, strategy) {
     if (strategy === "none") {
-        return getLongVersion(path);
+        return readVersion(path);
     }
-    const pubspec = readYaml(path);
     const version = getShortVersion(path);
+    const build = getBuildNumber(path).toString();
     const semverInc = require('semver/functions/inc')
-    pubspec.version = semverInc(version, strategy) + "+" + getBuildNumber(path).toString();
-    const fs = require('fs');
-    const yaml = require('js-yaml');
-    fs.writeFileSync(path, yaml.dump(pubspec));
-    return pubspec.version;
+    const newVersion = semverInc(version, strategy) + "+" + build;
+    writeVersion(path, newVersion);
+    return newVersion;
 }
 
 
 module.exports = {
-    readYaml,
-    getLongVersion,
+    readVersion,
     getShortVersion,
     getBuildNumber,
     bumpBuildNumber,

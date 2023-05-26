@@ -3,16 +3,6 @@ const filePath = "pubspec.yaml";
 const fs = require('fs');
 jest.mock('fs');
 
-describe('readYaml', function () {
-    test('reads example pubspec.yaml', () => {
-        fs.readFileSync.mockReturnValueOnce("version: 1.0.0+1");
-        const pubspec = versionUtils.readYaml(filePath);
-        expect(pubspec).toBeDefined();
-        expect(pubspec.version).toBeDefined();
-        expect(pubspec.version).toEqual("1.0.0+1");
-    });
-});
-
 describe('bumpBuildNumber', () => {
     test('should bump the build number', () => {
         fs.readFileSync.mockReturnValue("version: 1.0.0+2");
@@ -82,15 +72,15 @@ describe('getBuildNumber', () => {
     });
 });
 
-describe('getLongVersion', () => {
+describe('readVersion', () => {
     test('should fail if version cannot be found', () => {
         fs.readFileSync.mockReturnValue("");
-        expect(() => versionUtils.getLongVersion(filePath)).toThrow();
+        expect(() => versionUtils.readVersion(filePath)).toThrow();
     });
 
     test('should return version from yaml', () => {
         fs.readFileSync.mockReturnValue("version: whatever");
-        const version = versionUtils.getLongVersion(filePath);
+        const version = versionUtils.readVersion(filePath);
         expect(version).toEqual('whatever');
     });
 });
