@@ -39,11 +39,8 @@ function getBuildNumber(path) {
 }
 
 function bumpVersion(path, strategy, bumpBuild) {
-    if (strategy === "none") {
-        return readVersion(path);
-    }
     let version = getShortVersion(path);
-    if (strategy !== "none") {
+    if (!strategy || strategy !== "none" || strategy.length === 0) {
         const semverInc = require('semver/functions/inc')
         version = semverInc(version, strategy);
     }

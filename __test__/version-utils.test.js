@@ -30,7 +30,7 @@ describe('bumpVersion', () => {
     test('should return current version for strategy none', () => {
         fs.readFileSync.mockReturnValue("version: 1.0.0");
         const version = versionUtils.bumpVersion(filePath, 'none');
-        expect(version).toEqual("1.0.0");
+        expect(version).toEqual("1.0.0+0");
     });
 });
 

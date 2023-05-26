@@ -3374,11 +3374,8 @@ function getBuildNumber(path) {
 }
 
 function bumpVersion(path, strategy, bumpBuild) {
-    if (strategy === "none") {
-        return readVersion(path);
-    }
     let version = getShortVersion(path);
-    if (strategy !== "none") {
+    if (!strategy || strategy !== "none" || strategy.length === 0) {
         const semverInc = __nccwpck_require__(749)
         version = semverInc(version, strategy);
     }
@@ -3532,31 +3529,18 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(290);
 
-function getPubspecPath(parentDirectory) {
-    const fs = __nccwpck_require__(147);
-    const path = __nccwpck_require__(17);
-    const files = fs.readdirSync(parentDirectory);
-    core.debug(`📝 Found files ${files}`);
-    const pubspec = files.find(file => file === "pubspec.yaml");
-    if (pubspec) {
-        return path.join(parentDirectory, pubspec);
-    }
-    throw new Error("pubspec.yaml not found");
-}
 
 try {
     const strategy = core.getInput('strategy');
     const path = core.getInput('path');
     const bumpBuild = core.getInput('bump-build');
-    const pubspecPath = getPubspecPath(path);
     core.debug(`📝 Using strategy ${strategy}`);
-    core.debug(`📝 Using path ${path}`);
     core.debug(`📝 Using bump-build ${bumpBuild}`);
-    core.info(`✅ Found pubspec.yaml at ${pubspecPath}`);
+    core.info(`✅ Using pubspec.yaml at ${path}`);
     const versionUtils = __nccwpck_require__(490);
-    const oldVersion = versionUtils.readVersion(pubspecPath);
+    const oldVersion = versionUtils.readVersion(path);
     core.info(`📀 Found version ${oldVersion}`);
-    const newVersion = versionUtils.bumpVersion(pubspecPath, strategy, bumpBuild);
+    const newVersion = versionUtils.bumpVersion(path, strategy, bumpBuild);
     core.info(`🚀 Successfully bumped version to ${newVersion}`);
 
     core.setOutput("old-version", oldVersion);
