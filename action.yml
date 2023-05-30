@@ -1,5 +1,8 @@
 name: 'Update pubspec version'
 description: 'This action updates the pubspec version with different strategies'
+branding:
+  color: white
+  icon: 'package'
 inputs:
   strategy:
     description: 'The strategy to use to update the version. Can be major, minor, patch, or none.'
