@@ -1,0 +1,14 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    "local>stikkyapp/renovate-config"
+  ],
+  "ignorePaths": ["__test__"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["node"],
+      "allowedVersions": "<17"
+    }
+  ]
+}
