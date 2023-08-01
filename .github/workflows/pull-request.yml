@@ -1,0 +1,26 @@
+name: Pull Request
+
+on:
+  pull_request:
+
+concurrency:
+  group: pull-request-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: "package.json"
+
+      - run: npm install
+
+      - run: npm i -g @vercel/ncc
+
+      - run: npm run test
+
+      - run: npm run build

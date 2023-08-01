@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "npx ncc build index.js -o dist"
+    "build": "ncc build index.js -o dist"
   },
   "repository": {
     "type": "git",
