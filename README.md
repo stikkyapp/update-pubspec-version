@@ -29,7 +29,7 @@ The new version of the project.
 ## Example usage
 
 ```yaml
-uses: stikkyapp/update-pubspec-version@v1
+uses: stikkyapp/update-pubspec-version@v2
 with:
   strategy: 'patch'
   bump-build: true
